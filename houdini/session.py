@@ -177,7 +177,8 @@ def output():
   global process, stylization_ready, is_single, frames_sent, frame_offset
   while True:
     line = process.stdout.readline()
-    print(line)
+    if (line):
+      print(line)
     if "Added frame: " in line:
       if (is_single):
         frames_sent[0] = 1

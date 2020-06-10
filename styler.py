@@ -71,7 +71,6 @@ parser.add_argument("--octave_n", type=int, default=3)
 parser.add_argument("--octave_scale", type=float, default=1.8)
 parser.add_argument("--g_sigma", type=float, default=1.2)
 
-
 class Styler(object):
     def __init__(self, self_dict):
         # get arguments
@@ -86,7 +85,6 @@ class Styler(object):
         with tf.gfile.GFile(self.model_path, 'rb') as f:
             graph_def = tf.GraphDef()
             graph_def.ParseFromString(f.read())
-
         # fix checkerboard artifacts: ksize should be divisible by the stride size
         # but it changes scale
         if self.pool1:
@@ -642,15 +640,18 @@ def stylize(args):
                     d[int(info_frame) - args.target_frame, ...] = frame_d   
                     v[int(info_frame) - args.target_frame, ...] = frame_v
                 print("Added frame: " + info_frame)
+                sys.stdout.flush()
             elif (data == control_stop and not is_py3()) or (bytes(int(data)) == control_stop):
                 # Second step: Normalize the densities and velocities
                 d /= d_max
                 v /= v_max
                 print("Begin Stylization")
+                sys.stdout.flush()
                 break
             else:
                 print("ERROR: Invalid control byte sent")
                 print(data)
+                sys.stdout.flush()
                 sys.exit(0)
 
 
@@ -767,6 +768,7 @@ def stylize(args):
     result = styler.run(params)
     d_sty, loss, d_iter = result['d'], result['l'], result['d_iter']
     print("complete")
+    sys.stdout.flush()
 
     if (args.houdini):
         # Eigth Step (Houdini): Denormalize results
@@ -803,6 +805,7 @@ def stylize(args):
                     data_r = pickle.dumps(frame_r, 2)
                     info_r = str(len(data_r)).encode()
                     sys.stdout.write(str(len(control_data)))
+                    sys.stdout.flush()
                     help_send(str(inters[it]).encode())
                     help_send(str(int(args.target_frame+i)).encode())
                     help_send(info_r)
@@ -822,10 +825,12 @@ def stylize(args):
                     help_send(str(int(util_dim[1])).encode())
                     help_send(str(int(util_dim[0])).encode())
                     print(r_string)
+                sys.stdout.flush()
         if (is_py3()):
             sys.stdout.write(str(len(control_stop)))
         else:    
             sys.stdout.write(control_stop)
+        sys.stdout.flush()
 
     else:
         for i, d_sty_ in enumerate(d_sty):
