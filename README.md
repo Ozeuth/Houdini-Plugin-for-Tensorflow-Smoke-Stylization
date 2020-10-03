@@ -17,7 +17,7 @@ There are two types of transfer you can conduct: Stylistic and Semantic. Stylist
 
 ## Development
 ### Current Progress: Complete with Maintenance
-Feel free to contact me if you have any problems using the Houdini Plugin, or if you'd like to report a bug.
+Feel free to [contact me](mailto:ozeuthgatum@gmail.com) if you have any problems using the Houdini Plugin, or if you'd like to report a bug.
 
 ## Installation
 <details><summary>Python 3.6</summary>
